@@ -1,7 +1,19 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2 style="text-align: center;">Active Listings</h2>
+    
+        {% for listing in listings %}
+        <div style="border: 1px solid lightgrey; border-radius: 5px; text-align: center;">
+            <h3>{{ listing.title }}</h3>
+            <img style="max-width: 500px;" src= {{ listing.url }} alt="No image">
+            <p>{{ listing.description }}</p>
+            <p>Bidding starts at ${{ listing.startingbid }}</p>
+        </div>
+        {% endfor %}
 
-    TODO
+
+    </ul>
+
+
 {% endblock %}
