@@ -30,7 +30,7 @@ class Bid(models.Model):
         f"{self.bid}"
 
 
-class Comments(models.Model):
+class Comment(models.Model):
     comment = CharField(max_length=80)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
