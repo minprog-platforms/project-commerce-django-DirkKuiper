@@ -5,15 +5,11 @@
     
         {% for listing in listings %}
         <div style="border: 1px solid lightgrey; border-radius: 5px; text-align: center;">
-            <h3>{{ listing.title }}</h3>
-            <img style="max-width: 500px;" src= {{ listing.url }} alt="No image">
+            <a href="{% url 'listing' listing.title %}"><h3>{{ listing.title }}</h3></a>
+            <img style="max-width: 500px; max-height: 500px;" src= {{ listing.url }} alt="No image">
             <p>{{ listing.description }}</p>
             <p>Bidding starts at ${{ listing.startingbid }}</p>
         </div>
         {% endfor %}
-
-
-    </ul>
-
 
 {% endblock %}

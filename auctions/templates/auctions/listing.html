@@ -1,0 +1,52 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>{{ listing.title }}</h2>
+    
+        <div class="listing_info">
+            <img style="max-width: 800px; max-height: 800px;" src= {{ listing.url }} alt="No image">
+            <p>{{ listing.description }}</p>
+            <h4>${{ listing.startingbid }}</h4>
+        </div>
+
+        <div class="bidding_section" style="margin-top: 20px;">
+            <h5>Placed bids</h5>
+            <ul>
+            {% for bid in bids %}
+                <li>${{ bid }} by {{ bid.user }}</li>
+            {% endfor %}
+            </ul>
+            {% if user.is_authenticated %} 
+            <form action="{% url 'listing' listing.title %}" method="POST">
+                {% csrf_token %}
+                {{ bidform }}
+                <input type="submit", value="Place Bid">
+            </form>
+            {% endif %}
+        </div>
+
+        <div style="margin-top: 10px;">
+            <h5>Details</h5>
+            <ul>
+                <li>Listed by {{ listing.user }}</li>
+            </ul>
+        </div>
+
+        <div class="comment_section">
+            <h5>Comments</h5>
+            <div>
+            {% for comment in comments %}
+                <p style="border: 1px solid lightgrey; border-radius: 5px; width: 500px;">{{ comment }} - {{ comment.user }}</p>
+            {% endfor %}
+             </div>
+             {% if user.is_authenticated %}      
+            <form action="{% url 'listing' listing.title %}" method="POST">
+                {% csrf_token %}
+                {{ commentform }}
+                <input type="submit", value="Place Comment">
+            </form>
+            {% endif %}
+        </div>
+
+
+{% endblock %}

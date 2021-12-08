@@ -27,7 +27,7 @@ class Bid(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
 
     def __str__(self):
-        f"{self.bid}"
+        return f"{self.bid}"
 
 
 class Comment(models.Model):
@@ -36,4 +36,4 @@ class Comment(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
 
     def __str__(self):
-        f"{self.comment}"
+        return f"{self.comment}"
