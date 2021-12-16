@@ -2,6 +2,16 @@
 
 {% block body %}
     <h2>{{ listing.title }}</h2>
+
+        {% if listing.closedlisting %}
+        <div class="closedlisting">
+                <h2>This listing has been closed!</h2>
+            {% endif %}
+
+            {% if request.user == highestbid.user and listing.closedlisting == True %}
+                <h2>You won this listing!</h2>
+        </div>
+        {% endif %}
     
         <div class="listing_info">
             <img style="max-width: 800px; max-height: 800px;" src= {{ listing.url }} alt="No image">
@@ -9,15 +19,16 @@
             <h4>${{ listing.startingbid }}</h4>
         </div>
 
+        {% if listing.closedlisting == False and listing.user == user %} 
         <div class="closelisting">
-            {% if listing.closedlisting == False and listing.user == user %} 
             <form action="{% url 'listing' listing.title %}" method="post">
                 {% csrf_token %}
                 <input type="submit" name="close" value="close this listing">
             </form>
-            {% endif %}
         </div>
+        {% endif %}
 
+        {% if listing.closedlisting == False and user != listing.user  %}
         <div class="bidding_section" style="margin-top: 20px;">
             <h5>Placed bids</h5>
             <ul>
@@ -29,10 +40,11 @@
             <form action="{% url 'listing' listing.title %}" method="POST">
                 {% csrf_token %}
                 {{ bidform }}
-                <input type="submit", name="bid", value="Place Bid">
+                <input type="submit", value="Place Bid">
             </form>
             {% endif %}
         </div>
+        {% endif %}
 
         <div style="margin-top: 10px;">
             <h5>Details</h5>
@@ -52,7 +64,7 @@
             <form action="{% url 'listing' listing.title %}" method="POST">
                 {% csrf_token %}
                 {{ commentform }}
-                <input type="submit", name="comment", value="Place Comment">
+                <input type="submit", value="Place Comment">
             </form>
             {% endif %}
         </div>

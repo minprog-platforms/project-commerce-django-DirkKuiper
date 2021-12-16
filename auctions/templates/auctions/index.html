@@ -8,7 +8,7 @@
             <a href="{% url 'listing' listing.title %}"><h3>{{ listing.title }}</h3></a>
             <img style="max-width: 500px; max-height: 500px;" src= {{ listing.url }} alt="No image">
             <p>{{ listing.description }}</p>
-            <p>Bidding starts at ${{ listing.startingbid }}</p>
+            <p>Current prize is: ${{ listing.startingbid }}</p>
         </div>
         {% endfor %}
 

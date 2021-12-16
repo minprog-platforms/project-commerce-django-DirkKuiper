@@ -89,17 +89,20 @@ def register(request):
 def listing(request, name):
     # Saves listing for further reference
     listing = Listing.objects.filter(title=name).first()
+    comments = Comment.objects.filter(listing=listing)
+    bids = Bid.objects.filter(listing=listing)
+    highestbid = Bid.objects.filter(listing=listing).first()
 
     # Handles user input on listing page for placing a bid
     if request.method == "POST" and "bid" in request.POST:
 
-        form = NewBidForm(request.POST)
-
-        if form.is_valid():
+        form1 = NewBidForm(request.POST)
+        
+        if form1.is_valid():
             # Makes sure the big is higher than the previous highest bid
             if float(request.POST["bid"]) > listing.startingbid:
                 # Saves bidding to database
-                bidding = form.cleaned_data["bid"]
+                bidding = form1.cleaned_data["bid"]
                 newbid = Bid(bid=bidding, user=request.user, listing=listing)
                 newbid.save()
                 listing.startingbid = bidding
@@ -112,8 +115,9 @@ def listing(request, name):
         else:
             return render(request, "auctions/listing.html", {
                 "listing": listing,
-                "comments": Comment.objects.filter(listing=listing),
-                "bids": Bid.objects.filter(listing=listing),
+                "comments": comments,
+                "bids": bids,
+                "highestbid": highestbid,
                 "bidform": NewBidForm(),
                 "commentform": NewCommentForm()
             })
@@ -121,19 +125,21 @@ def listing(request, name):
         # Handles user input for user placing a comment on a listing
     elif request.method == "POST" and "comment" in request.POST:
 
-        form = NewCommentForm(request.POST)
+        form2 = NewCommentForm(request.POST)
+        print(form2)
 
-        if form.is_valid():
+        if form2.is_valid():
             # Saves comment to database
-            comment = form.cleaned_data["comment"]
+            comment = form2.cleaned_data["comment"]
             newcomment = Comment(comment=comment, user=request.user, listing=listing)
             newcomment.save()
             return HttpResponseRedirect(reverse("listing", args=[name]))
         else:
             return render(request, "auctions/listing.html", {
                 "listing": listing,
-                "comments": Comment.objects.filter(listing=listing),
-                "bids": Bid.objects.filter(listing=listing),
+                "comments": comments,
+                "bids": bids,
+                "highestbid": highestbid,
                 "bidform": NewBidForm(),
                 "commentform": NewCommentForm()
                 })
@@ -148,13 +154,14 @@ def listing(request, name):
 
         return render(request, "auctions/listing.html", {
             "listing": listing,
-            "comments": Comment.objects.filter(listing=listing),
-            "bids": Bid.objects.filter(listing=listing),
+            "comments": comments,
+            "bids": bids,
+            "highestbid": highestbid,
             "bidform": NewBidForm(),
             "commentform": NewCommentForm()
         })
 
-
+@login_required(login_url="login")
 def new_listing(request):    
     if request.method == "POST":
 
